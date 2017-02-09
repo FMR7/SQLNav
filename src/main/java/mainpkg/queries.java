@@ -47,13 +47,9 @@ public class queries {
             DatabaseMetaData meta = conn.getMetaData();
             rs = meta.getCatalogs();
             
-            
-            System.out.println("\nDATABASES");
             while(rs.next())
             {
-                String str = rs.getString("TABLE_CAT");
-                System.out.println(str);
-                dbs.add(new database(str));
+                dbs.add(new database(rs.getString("TABLE_CAT")));
             }
             rs.close();
             conn.close();
@@ -80,11 +76,8 @@ public class queries {
             stat = conn.createStatement();
             rs = stat.executeQuery("show tables from " + db.getName());
             
-            
-            System.out.println("\nTABLES");
             while(rs.next())
             {
-                System.out.println(rs.getObject(1));
                 tables.add(new table(rs.getObject(1).toString()));
             }
             rs.close();

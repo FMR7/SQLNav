@@ -48,3 +48,4 @@ Temporary Items
 /.gradle/
 /.nb-gradle/
 /build/
+nbproject/project.properties
