@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import objects.database;
 import objects.host;
 import objects.table;
+import objects.view;
 
 /**
  *
@@ -74,7 +75,7 @@ public class queries {
             conn = DriverManager.getConnection("jdbc:mysql://" + h.getIp() + ":" + h.getPort() + "/", h.getUser(), h.getPass());
 
             stat = conn.createStatement();
-            rs = stat.executeQuery("show tables from " + db.getName());
+            rs = stat.executeQuery("show full tables from " + db.getName() + " where TABLE_TYPE like \'BASE_TABLE\'");
             
             while(rs.next())
             {
@@ -88,4 +89,25 @@ public class queries {
         return(tables);
     }
     
+    
+    public List<view> getViews(host h, database db){
+        List<view> views = new ArrayList<>();
+        
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://" + h.getIp() + ":" + h.getPort() + "/", h.getUser(), h.getPass());
+
+            stat = conn.createStatement();
+            rs = stat.executeQuery("show full tables from " + db.getName() + " where TABLE_TYPE like \'VIEW\'");
+            
+            while(rs.next())
+            {
+                views.add(new view(rs.getObject(1).toString()));
+            }
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return(views);
+    }
 }

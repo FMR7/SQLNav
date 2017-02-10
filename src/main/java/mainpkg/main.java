@@ -4,6 +4,7 @@ import java.util.List;
 import objects.database;
 import objects.host;
 import objects.table;
+import objects.view;
 
 /**
  *
@@ -24,12 +25,20 @@ public class main {
         }
         
         
-        database db = new database("mail");
+        database db = new database("musica");
         List<table> tables = new queries().getTables(testHost, db);
         
         System.out.println("\nTABLES");
         for(int i = 0; i < tables.size(); i++){
             System.out.println(tables.get(i).getName());
         }
+        
+        List<view> views = new queries().getViews(testHost, db);
+        
+        System.out.println("\nVIEWS");
+        for(int i = 0; i < views.size(); i++){
+            System.out.println(views.get(i).getName());
+        }
+        
     }
 }
