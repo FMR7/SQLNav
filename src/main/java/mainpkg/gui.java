@@ -5,12 +5,25 @@
  */
 package mainpkg;
 
+import java.awt.HeadlessException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.tree.TreePath;
+import objects.host;
+
 /**
  *
  * @author Fernando
  */
 public class gui extends javax.swing.JFrame {
 
+    List<host> hosts = new ArrayList<>();
+
+    public gui(List<host> h) throws HeadlessException {
+        initComponents();
+        this.hosts = h;
+    }
+    
     /**
      * Creates new form gui
      */
@@ -28,9 +41,17 @@ public class gui extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jScrollPaneTree = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jScrollPaneTables = new javax.swing.JScrollPane();
+        jListTables = new javax.swing.JList<>();
+        jScrollPaneViews = new javax.swing.JScrollPane();
+        jListViews = new javax.swing.JList<>();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -42,11 +63,66 @@ public class gui extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SQLNav");
 
-        jSplitPane1.setDividerLocation(200);
+        jSplitPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jSplitPane1.setDividerLocation(250);
+        jSplitPane1.setDividerSize(5);
+        jSplitPane1.setForeground(new java.awt.Color(255, 255, 255));
 
-        jScrollPane1.setViewportView(jTree1);
+        jSplitPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jSplitPane2.setDividerLocation(250);
+        jSplitPane2.setDividerSize(5);
+        jSplitPane2.setForeground(java.awt.Color.white);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jSplitPane1.setLeftComponent(jScrollPane1);
+        jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTree1MouseClicked(evt);
+            }
+        });
+        jScrollPaneTree.setViewportView(jTree1);
+
+        jSplitPane2.setTopComponent(jScrollPaneTree);
+
+        jTabbedPane2.setName(""); // NOI18N
+
+        jListTables.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPaneTables.setViewportView(jListTables);
+
+        jTabbedPane2.addTab("tab1", jScrollPaneTables);
+
+        jListViews.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPaneViews.setViewportView(jListViews);
+
+        jTabbedPane2.addTab("tab2", jScrollPaneViews);
+
+        jSplitPane2.setRightComponent(jTabbedPane2);
+
+        jSplitPane1.setLeftComponent(jSplitPane2);
+        jSplitPane2.getAccessibleContext().setAccessibleParent(jSplitPane1);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable1);
+
+        jTabbedPane1.addTab("tab1", jScrollPane3);
+
         jSplitPane1.setRightComponent(jTabbedPane1);
 
         jMenu1.setText("File");
@@ -75,19 +151,41 @@ public class gui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1002, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
+        // TODO add your handling code here:
+        TreePath tp = null;
+        try{
+            tp = jTree1.getSelectionPath().getParentPath();
+        }catch(Exception ex){
+            //tp equals null
+        }
+        if(tp != null){
+            String str = jTree1.getSelectionModel().getSelectionPath().toString();
+            System.out.println(str);
+            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+            host selHost = hosts.get(sel[0]-1);
+            
+            System.out.println("\nClicked host:");
+            System.out.println(selHost.getIp() + ":" + selHost.getPort());
+            System.out.println(selHost.getUser()+ ":" + selHost.getPass());
+        }
+        
+        
+    }//GEN-LAST:event_jTree1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -125,6 +223,8 @@ public class gui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> jListTables;
+    private javax.swing.JList<String> jListViews;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -132,9 +232,15 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPaneTables;
+    public javax.swing.JScrollPane jScrollPaneTree;
+    private javax.swing.JScrollPane jScrollPaneViews;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTree jTree1;
+    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTable jTable1;
+    public javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

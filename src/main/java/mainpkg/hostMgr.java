@@ -53,10 +53,7 @@ public class hostMgr {
     public boolean dirExists(){
         File dir = new File(hostsFolder);
         
-        if(dir.exists()){
-            return true;
-        }
-        return false;
+        return dir.exists();
     }
     
     public boolean newHost(host h){

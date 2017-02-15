@@ -1,10 +1,10 @@
 package mainpkg;
 
+import java.util.ArrayList;
 import java.util.List;
-import objects.database;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import objects.host;
-import objects.table;
-import objects.view;
 
 /**
  *
@@ -12,10 +12,25 @@ import objects.view;
  */
 public class main {
 
+    static hostMgr hMgr = new hostMgr();
+    static List<host> hosts = new ArrayList<>();
+    
     public static void main(String[] args){
-        //gui g = new gui();
-        //g.setVisible(true);
+        hMgr.hostsFolder = "hosts";
         
+        if(hMgr.dirExists()){
+            hosts = hMgr.readHosts();
+        } else{
+            hMgr.createDir();
+        }
+        
+        gui g = new gui(hosts);
+        g.setVisible(true);
+        
+        treeFill(g);
+        
+        
+        /*
         host testHost = new host(1, "TEST_HOST", "127.0.0.1", "3306", "root", "");
         List<database> dBs = new queries().getDBs(testHost);
         
@@ -39,6 +54,18 @@ public class main {
         for(int i = 0; i < views.size(); i++){
             System.out.println(views.get(i).getName());
         }
+        */
+    }
+    
+    public static void treeFill(gui g){
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Hosts");
+        DefaultTreeModel model = new DefaultTreeModel(top);
+        g.jTree1.setModel(model);
         
+        for (int i = 0; i < hosts.size(); i++) {
+            DefaultMutableTreeNode hst = new DefaultMutableTreeNode();
+            hst.setUserObject(hosts.get(i).getName());
+            top.add(hst);
+        }
     }
 }
