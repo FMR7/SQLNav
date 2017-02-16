@@ -17,13 +17,6 @@ import objects.host;
  */
 public class gui extends javax.swing.JFrame {
 
-    List<host> hosts = new ArrayList<>();
-
-    public gui(List<host> h) throws HeadlessException {
-        initComponents();
-        this.hosts = h;
-    }
-    
     /**
      * Creates new form gui
      */
@@ -45,6 +38,8 @@ public class gui extends javax.swing.JFrame {
         jScrollPaneTree = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jTabbedPane2 = new javax.swing.JTabbedPane();
+        jScrollPaneDatabases = new javax.swing.JScrollPane();
+        jListDatabases = new javax.swing.JList<>();
         jScrollPaneTables = new javax.swing.JScrollPane();
         jListTables = new javax.swing.JList<>();
         jScrollPaneViews = new javax.swing.JScrollPane();
@@ -54,6 +49,7 @@ public class gui extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -85,23 +81,32 @@ public class gui extends javax.swing.JFrame {
 
         jTabbedPane2.setName(""); // NOI18N
 
-        jListTables.setModel(new javax.swing.AbstractListModel<String>() {
+        jListDatabases.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPaneDatabases.setViewportView(jListDatabases);
+
+        jTabbedPane2.addTab("Databases", jScrollPaneDatabases);
+
+        jListTables.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPaneTables.setViewportView(jListTables);
 
-        jTabbedPane2.addTab("tab1", jScrollPaneTables);
+        jTabbedPane2.addTab("Tables", jScrollPaneTables);
 
         jListViews.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2" };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPaneViews.setViewportView(jListViews);
 
-        jTabbedPane2.addTab("tab2", jScrollPaneViews);
+        jTabbedPane2.addTab("Views", jScrollPaneViews);
 
         jSplitPane2.setRightComponent(jTabbedPane2);
 
@@ -126,6 +131,15 @@ public class gui extends javax.swing.JFrame {
         jSplitPane1.setRightComponent(jTabbedPane1);
 
         jMenu1.setText("File");
+
+        jMenuItem1.setText("New host");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -177,7 +191,7 @@ public class gui extends javax.swing.JFrame {
             String str = jTree1.getSelectionModel().getSelectionPath().toString();
             System.out.println(str);
             int[] sel = jTree1.getSelectionModel().getSelectionRows();
-            host selHost = hosts.get(sel[0]-1);
+            host selHost = main.hosts.get(sel[0]-1);
             
             System.out.println("\nClicked host:");
             System.out.println(selHost.getIp() + ":" + selHost.getPort());
@@ -186,6 +200,12 @@ public class gui extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jTree1MouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        newHost nHost = new newHost();
+        nHost.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,6 +243,7 @@ public class gui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> jListDatabases;
     private javax.swing.JList<String> jListTables;
     private javax.swing.JList<String> jListViews;
     private javax.swing.JMenu jMenu1;
@@ -232,7 +253,9 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPaneDatabases;
     private javax.swing.JScrollPane jScrollPaneTables;
     public javax.swing.JScrollPane jScrollPaneTree;
     private javax.swing.JScrollPane jScrollPaneViews;

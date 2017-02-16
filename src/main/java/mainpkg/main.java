@@ -15,49 +15,31 @@ public class main {
     static hostMgr hMgr = new hostMgr();
     static List<host> hosts = new ArrayList<>();
     
+    static gui g;
+    
     public static void main(String[] args){
         hMgr.hostsFolder = "hosts";
+        g = new gui();
+        g.setVisible(true);
         
+        ini();
+    }
+    
+    public static void ini(){
         if(hMgr.dirExists()){
             hosts = hMgr.readHosts();
         } else{
             hMgr.createDir();
         }
         
-        gui g = new gui(hosts);
-        g.setVisible(true);
-        
-        treeFill(g);
-        
-        
-        /*
-        host testHost = new host(1, "TEST_HOST", "127.0.0.1", "3306", "root", "");
-        List<database> dBs = new queries().getDBs(testHost);
-        
-        System.out.println("\nDATABASES");
-        for(int i = 0; i < dBs.size(); i++){
-            System.out.println(dBs.get(i).getName());
-        }
-        
-        
-        database db = new database("musica");
-        List<table> tables = new queries().getTables(testHost, db);
-        
-        System.out.println("\nTABLES");
-        for(int i = 0; i < tables.size(); i++){
-            System.out.println(tables.get(i).getName());
-        }
-        
-        List<view> views = new queries().getViews(testHost, db);
-        
-        System.out.println("\nVIEWS");
-        for(int i = 0; i < views.size(); i++){
-            System.out.println(views.get(i).getName());
-        }
-        */
+        treeFill();
     }
     
-    public static void treeFill(gui g){
+    /**
+     * Fills the tree with the hosts
+     * @param g The objective gui with the tree
+     */
+    public static void treeFill(){
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Hosts");
         DefaultTreeModel model = new DefaultTreeModel(top);
         g.jTree1.setModel(model);

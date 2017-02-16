@@ -19,11 +19,14 @@ public class queriesTest {
      */
     @Test
     public void testGetDBs() {
-        System.out.println("getDBs");
+        System.out.println("\nTest---getDBs");
         host h = new host(1, "TEST_HOST", "127.0.0.1", "3306", "root", "");
         queries instance = new queries();
         int expResult = 6;
         List<database> result = instance.getDBs(h);
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).getName());
+        }
         assertEquals(expResult, result.size());
     }
 
@@ -32,12 +35,16 @@ public class queriesTest {
      */
     @Test
     public void testGetTables() {
-        System.out.println("getTables");
+        System.out.println("\nTest---getTables");
         host h = new host(1, "TEST_HOST", "127.0.0.1", "3306", "root", "");
         database db = new database("musica");
         queries instance = new queries();
         int expResult = 8;
         List<table> result = instance.getTables(h, db);
+        
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).getName());
+        }
         assertEquals(expResult, result.size());
     }
 
@@ -46,12 +53,16 @@ public class queriesTest {
      */
     @Test
     public void testGetViews() {
-        System.out.println("getViews");
+        System.out.println("\nTest---getViews");
         host h = new host(1, "TEST_HOST", "127.0.0.1", "3306", "root", "");
         database db = new database("musica");
         queries instance = new queries();
         int expResult = 8;
         List<view> result = instance.getViews(h, db);
+        
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).getName());
+        }
         assertEquals(expResult, result.size());
     }
     

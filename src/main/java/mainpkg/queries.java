@@ -34,7 +34,6 @@ public class queries {
     }
     
     /**
-     * 
      * Returns the databases of a given host
      * @param h Host object
      * @return The databases from the host in a list
@@ -62,7 +61,6 @@ public class queries {
     
     
     /**
-     * 
      * Returns the tables of a given host and database 
      * @param h Host object
      * @param db Database object
@@ -89,7 +87,12 @@ public class queries {
         return(tables);
     }
     
-    
+    /**
+     * Returns the views of a given host and database 
+     * @param h
+     * @param db
+     * @return The views from the database in a list
+     */
     public List<view> getViews(host h, database db){
         List<view> views = new ArrayList<>();
         

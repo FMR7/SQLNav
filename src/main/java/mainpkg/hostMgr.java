@@ -28,6 +28,10 @@ public class hostMgr {
         
     }
     
+    /**
+     * Creates the hosts folder
+     * @return True if created else false
+     */
     public boolean createDir(){
         File dir = new File(hostsFolder);
 
@@ -39,6 +43,10 @@ public class hostMgr {
         return dirCreated;
     }
     
+    /**
+     * Removes the hosts folder if exists
+     * @return True if removed else false
+     */
     public boolean removeDir(){
         File dir = new File(hostsFolder);
 
@@ -50,12 +58,21 @@ public class hostMgr {
         return dirRemoved;
     }
     
+    /**
+     * Check if hosts folder exists
+     * @return True if exists else false
+     */
     public boolean dirExists(){
         File dir = new File(hostsFolder);
         
         return dir.exists();
     }
     
+    /**
+     * Saves a new host
+     * @param h Host object to save
+     * @return True if saved
+     */
     public boolean newHost(host h){
         boolean saved = false;
         
@@ -88,6 +105,12 @@ public class hostMgr {
         return saved;
     }
     
+    
+    /**
+     * Removes a host
+     * @param h Host object to remove
+     * @return True if removed else false
+     */
     public boolean delHost(host h){
         boolean deleted = false;
         
@@ -103,6 +126,11 @@ public class hostMgr {
         return deleted;
     }
     
+    
+    /**
+     * Reads all hosts in hostsFolder and returns a list
+     * @return The list of hosts objects
+     */
     public List<host> readHosts(){
         List<host> hosts = new ArrayList<>();
         File[] listFilesInFolder = listFilesInFolder();
@@ -134,15 +162,31 @@ public class hostMgr {
                 }
             }
         }
-        
-        
         return hosts;
     }
     
+    
+    /**
+     * Reads all files in hostsFolder and returns an array
+     * @return The array of files
+     */
     public File[] listFilesInFolder() {
         File dir = new File(hostsFolder);
         File[] listOfFiles = dir.listFiles();
-
         return listOfFiles;
+    }
+    
+    
+    /**
+     * Read all files in hostsFolder and returns the last id
+     * @return The last host id
+     */
+    public int nextIdHost(){
+        int id = 0;
+        List<host> readHosts = readHosts();
+        if(readHosts.size() != 0){
+            id = readHosts.get(readHosts.size()-1).getId();
+        }
+        return id+1;
     }
 }
