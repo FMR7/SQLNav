@@ -8,7 +8,11 @@ package mainpkg;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 import javax.swing.tree.TreePath;
+import objects.database;
 import objects.host;
 
 /**
@@ -17,6 +21,8 @@ import objects.host;
  */
 public class gui extends javax.swing.JFrame {
 
+    List<database> selDBs;
+    
     /**
      * Creates new form gui
      */
@@ -193,9 +199,13 @@ public class gui extends javax.swing.JFrame {
             int[] sel = jTree1.getSelectionModel().getSelectionRows();
             host selHost = main.hosts.get(sel[0]-1);
             
-            System.out.println("\nClicked host:");
-            System.out.println(selHost.getIp() + ":" + selHost.getPort());
-            System.out.println(selHost.getUser()+ ":" + selHost.getPass());
+            selDBs = new queries().getDBs(selHost);
+            jListDatabases.setModel(new DefaultListModel<>());
+            DefaultListModel dlm = (DefaultListModel) jListDatabases.getModel();
+            
+            for (int i = 0; i < selDBs.size(); i++) {
+                dlm.add(0, selDBs.get(i).getName());
+            }
         }
         
         
