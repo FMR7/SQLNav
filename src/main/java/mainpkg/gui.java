@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mainpkg;
 
-import java.awt.HeadlessException;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
-import javax.swing.ListModel;
 import javax.swing.tree.TreePath;
 import objects.database;
 import objects.host;
@@ -87,11 +78,6 @@ public class gui extends javax.swing.JFrame {
 
         jTabbedPane2.setName(""); // NOI18N
 
-        jListDatabases.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPaneDatabases.setViewportView(jListDatabases);
 
         jTabbedPane2.addTab("Databases", jScrollPaneDatabases);
@@ -194,18 +180,18 @@ public class gui extends javax.swing.JFrame {
             //tp equals null
         }
         if(tp != null){
-            String str = jTree1.getSelectionModel().getSelectionPath().toString();
-            System.out.println(str);
             int[] sel = jTree1.getSelectionModel().getSelectionRows();
             host selHost = main.hosts.get(sel[0]-1);
             
             selDBs = new queries().getDBs(selHost);
-            jListDatabases.setModel(new DefaultListModel<>());
-            DefaultListModel dlm = (DefaultListModel) jListDatabases.getModel();
+            DefaultListModel<String> dlm = new DefaultListModel<>();
             
             for (int i = 0; i < selDBs.size(); i++) {
-                dlm.add(0, selDBs.get(i).getName());
+                String dbName = selDBs.get(i).getName();
+                dlm.addElement(dbName);
             }
+            
+            jListDatabases.setModel(dlm);
         }
         
         
