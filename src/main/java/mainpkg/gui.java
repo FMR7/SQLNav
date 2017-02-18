@@ -1,10 +1,15 @@
 package mainpkg;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import objects.database;
 import objects.host;
+import objects.table;
+import objects.view;
 
 /**
  *
@@ -12,15 +17,51 @@ import objects.host;
  */
 public class gui extends javax.swing.JFrame {
 
-    List<database> selDBs;
+    private host selHost;
+    private List<database> selDBs;
+    
+    static hostMgr hMgr = new hostMgr();
+    static List<host> hosts = new ArrayList<>();
     
     /**
      * Creates new form gui
      */
     public gui() {
         initComponents();
+        ini();
     }
-
+    
+    
+    /**
+     * Checks if hosts folder exists, if not, it will create it. Also updates the jTree
+     */
+    public static void ini(){
+        hMgr.hostsFolder = main.hostsFolder;
+        if(hMgr.dirExists()){
+            hosts = hMgr.readHosts();
+        } else{
+            hMgr.createDir();
+        }
+        
+        treeFill();
+    }
+    
+    
+    /**
+     * Fills the tree with the hosts
+     */
+    public static void treeFill(){
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Hosts");
+        DefaultTreeModel model = new DefaultTreeModel(top);
+        jTree1.setModel(model);
+        
+        for (int i = 0; i < hosts.size(); i++) {
+            DefaultMutableTreeNode hst = new DefaultMutableTreeNode();
+            hst.setUserObject(hosts.get(i).getName());
+            top.add(hst);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,9 +75,11 @@ public class gui extends javax.swing.JFrame {
         jSplitPane2 = new javax.swing.JSplitPane();
         jScrollPaneTree = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jSplitPane3 = new javax.swing.JSplitPane();
+        jTabbedPaneDatabases = new javax.swing.JTabbedPane();
         jScrollPaneDatabases = new javax.swing.JScrollPane();
         jListDatabases = new javax.swing.JList<>();
+        jTabbedPaneTablesViews = new javax.swing.JTabbedPane();
         jScrollPaneTables = new javax.swing.JScrollPane();
         jListTables = new javax.swing.JList<>();
         jScrollPaneViews = new javax.swing.JScrollPane();
@@ -62,7 +105,7 @@ public class gui extends javax.swing.JFrame {
         jSplitPane1.setForeground(new java.awt.Color(255, 255, 255));
 
         jSplitPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jSplitPane2.setDividerLocation(250);
+        jSplitPane2.setDividerLocation(150);
         jSplitPane2.setDividerSize(5);
         jSplitPane2.setForeground(java.awt.Color.white);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -76,31 +119,35 @@ public class gui extends javax.swing.JFrame {
 
         jSplitPane2.setTopComponent(jScrollPaneTree);
 
-        jTabbedPane2.setName(""); // NOI18N
+        jSplitPane3.setBorder(null);
+        jSplitPane3.setDividerLocation(100);
+        jSplitPane3.setDividerSize(5);
+        jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
+        jListDatabases.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListDatabasesMouseClicked(evt);
+            }
+        });
         jScrollPaneDatabases.setViewportView(jListDatabases);
 
-        jTabbedPane2.addTab("Databases", jScrollPaneDatabases);
+        jTabbedPaneDatabases.addTab("Databases", jScrollPaneDatabases);
 
-        jListTables.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        jSplitPane3.setTopComponent(jTabbedPaneDatabases);
+
+        jTabbedPaneTablesViews.setName(""); // NOI18N
+
         jScrollPaneTables.setViewportView(jListTables);
 
-        jTabbedPane2.addTab("Tables", jScrollPaneTables);
+        jTabbedPaneTablesViews.addTab("Tables", jScrollPaneTables);
 
-        jListViews.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPaneViews.setViewportView(jListViews);
 
-        jTabbedPane2.addTab("Views", jScrollPaneViews);
+        jTabbedPaneTablesViews.addTab("Views", jScrollPaneViews);
 
-        jSplitPane2.setRightComponent(jTabbedPane2);
+        jSplitPane3.setRightComponent(jTabbedPaneTablesViews);
+
+        jSplitPane2.setBottomComponent(jSplitPane3);
 
         jSplitPane1.setLeftComponent(jSplitPane2);
         jSplitPane2.getAccessibleContext().setAccessibleParent(jSplitPane1);
@@ -172,7 +219,6 @@ public class gui extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
-        // TODO add your handling code here:
         TreePath tp = null;
         try{
             tp = jTree1.getSelectionPath().getParentPath();
@@ -181,16 +227,16 @@ public class gui extends javax.swing.JFrame {
         }
         if(tp != null){
             int[] sel = jTree1.getSelectionModel().getSelectionRows();
-            host selHost = main.hosts.get(sel[0]-1);
+            host selH = hosts.get(sel[0]-1);
             
-            selDBs = new queries().getDBs(selHost);
+            selDBs = new queries().getDBs(selH);
             DefaultListModel<String> dlm = new DefaultListModel<>();
             
             for (int i = 0; i < selDBs.size(); i++) {
                 String dbName = selDBs.get(i).getName();
                 dlm.addElement(dbName);
             }
-            
+            selHost = selH;
             jListDatabases.setModel(dlm);
         }
         
@@ -198,10 +244,33 @@ public class gui extends javax.swing.JFrame {
     }//GEN-LAST:event_jTree1MouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
         newHost nHost = new newHost();
+        nHost.setLocationRelativeTo(super.rootPane);
         nHost.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jListDatabasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListDatabasesMouseClicked
+        String s = jListDatabases.getSelectedValue();
+        if(s != null){
+            database db = new database(s);
+            List<table> tables = new queries().getTables(selHost, db);
+            List<view> views = new queries().getViews(selHost, db);
+
+            DefaultListModel<String> dlm = new DefaultListModel<>();
+            for (int i = 0; i < tables.size(); i++) {
+                String tableName = tables.get(i).getName();
+                dlm.addElement(tableName);
+            }
+            jListTables.setModel(dlm);
+
+            DefaultListModel<String> dlm2 = new DefaultListModel<>();
+            for (int i = 0; i < views.size(); i++) {
+                String viewName = views.get(i).getName();
+                dlm2.addElement(viewName);
+            }
+            jListViews.setModel(dlm2);
+        }
+    }//GEN-LAST:event_jListDatabasesMouseClicked
 
     /**
      * @param args the command line arguments
@@ -253,13 +322,15 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPaneDatabases;
     private javax.swing.JScrollPane jScrollPaneTables;
-    public javax.swing.JScrollPane jScrollPaneTree;
+    private javax.swing.JScrollPane jScrollPaneTree;
     private javax.swing.JScrollPane jScrollPaneViews;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTabbedPane jTabbedPaneDatabases;
+    private javax.swing.JTabbedPane jTabbedPaneTablesViews;
     private javax.swing.JTable jTable1;
-    public javax.swing.JTree jTree1;
+    private static javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

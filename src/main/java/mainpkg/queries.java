@@ -54,7 +54,7 @@ public class queries {
             rs.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            main.infoBox("No connection to MySQL server.\nCheck if it's online.", "INFO");
         }
         return(dbs);
     }
@@ -73,7 +73,7 @@ public class queries {
             conn = DriverManager.getConnection("jdbc:mysql://" + h.getIp() + ":" + h.getPort() + "/", h.getUser(), h.getPass());
 
             stat = conn.createStatement();
-            rs = stat.executeQuery("show full tables from " + db.getName() + " where TABLE_TYPE like \'BASE_TABLE\'");
+            rs = stat.executeQuery("show full tables from " + db.getName() + " where TABLE_TYPE like \'BASE_TABLE\' or TABLE_TYPE like \'SYSTEM_VIEW\'");
             
             while(rs.next())
             {
@@ -82,15 +82,15 @@ public class queries {
             rs.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            main.infoBox("No connection to MySQL server or incorrect table.", "INFO");
         }
         return(tables);
     }
     
     /**
      * Returns the views of a given host and database 
-     * @param h
-     * @param db
+     * @param h Host object
+     * @param db Database object
      * @return The views from the database in a list
      */
     public List<view> getViews(host h, database db){
@@ -109,7 +109,7 @@ public class queries {
             rs.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            main.infoBox("No connection to MySQL server or incorrect view.", "INFO");
         }
         return(views);
     }
