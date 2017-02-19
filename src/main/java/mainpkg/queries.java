@@ -113,4 +113,26 @@ public class queries {
         }
         return(views);
     }
+    
+    /**
+     * Returns a ResultSet to build the table
+     * @param h Host object
+     * @param db Database object
+     * @param t Table object
+     * @return The ResultSet with the table data
+     */
+    public ResultSet getTable(host h, database db, table t){
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://" + h.getIp() + ":" + h.getPort() + "/", h.getUser(), h.getPass());
+
+            stat = conn.createStatement();
+            System.out.println("select * from " + db.getName() + "." + t.getName());
+            rs = stat.executeQuery("select * from " + db.getName() + "." + t.getName());
+        } catch (SQLException e) {
+            main.infoBox("No connection to MySQL server or incorrect table.", "INFO");
+        }
+        return(rs);
+    }
+    
+    
 }

@@ -16,6 +16,11 @@ public class main {
         g.setVisible(true);
     }
     
+    /**
+     * Shows a MessageDialog
+     * @param infoMessage The body of the message
+     * @param titleBar The title of the message
+     */
     public static void infoBox(String infoMessage, String titleBar)
     {
         JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
