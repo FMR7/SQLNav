@@ -147,6 +147,7 @@ public class newHost extends javax.swing.JFrame {
             host h = new host(nextId, name, ip, port, user, pass);
             hMgr.newHost(h);
             gui.ini();
+            gui.jTree1.expandRow(0);
             this.dispose();
         }else{
             main.infoBox("Fill the required fields.", "INFO");

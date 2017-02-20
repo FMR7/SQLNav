@@ -1,5 +1,9 @@
 package mainpkg;
 
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -8,7 +12,10 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +48,6 @@ public class gui extends javax.swing.JFrame {
         ini();
     }
     
-    
     /**
      * Checks if hosts folder exists, if not, it will create it. Also updates the jTree
      */
@@ -54,10 +60,9 @@ public class gui extends javax.swing.JFrame {
         }
         
         treeFill();
-        
+        jTree1.expandRow(0);
         
     }
-    
     
     /**
      * Fills the tree with the hosts
@@ -103,6 +108,7 @@ public class gui extends javax.swing.JFrame {
         return new DefaultTableModel(data, columnNames);
     }
     
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -125,7 +131,7 @@ public class gui extends javax.swing.JFrame {
         jListTables = new javax.swing.JList<>();
         jScrollPaneViews = new javax.swing.JScrollPane();
         jListViews = new javax.swing.JList<>();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jTabbedPane1 = new ClosableTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -303,7 +309,7 @@ public class gui extends javax.swing.JFrame {
             jListViews.setModel(dlm2);
         }
     }//GEN-LAST:event_jListDatabasesMouseClicked
-
+    
     private void jListTablesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListTablesMouseClicked
         String s = jListDatabases.getSelectedValue();
         String str = jListTables.getSelectedValue();
@@ -318,6 +324,8 @@ public class gui extends javax.swing.JFrame {
                 jt.setModel(buildTableModel(rs));
                 JScrollPane jsp = new JScrollPane(jt);
                 jTabbedPane1.addTab(str ,jsp);
+                
+                jTabbedPane1.setSelectedIndex(jTabbedPane1.getTabCount()-1);
             } catch (SQLException ex) {
                 Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -338,6 +346,8 @@ public class gui extends javax.swing.JFrame {
                 jt.setModel(buildTableModel(rs));
                 JScrollPane jsp = new JScrollPane(jt);
                 jTabbedPane1.addTab(str ,jsp);
+                
+                jTabbedPane1.setSelectedIndex(jTabbedPane1.getTabCount()-1);
             } catch (SQLException ex) {
                 Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -378,7 +388,7 @@ public class gui extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> jListDatabases;
     private javax.swing.JList<String> jListTables;
@@ -401,6 +411,6 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPaneDatabases;
     private javax.swing.JTabbedPane jTabbedPaneTablesViews;
-    private static javax.swing.JTree jTree1;
+    public static javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }
