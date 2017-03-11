@@ -322,6 +322,7 @@ public class gui extends javax.swing.JFrame {
                 jt.getTableHeader().setReorderingAllowed(false);
                 
                 jt.setModel(buildTableModel(rs));
+                jt.setEnabled(false);
                 JScrollPane jsp = new JScrollPane(jt);
                 jTabbedPane1.addTab(str ,jsp);
                 
